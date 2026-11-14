@@ -39,9 +39,9 @@
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let width = 0, height = 0, frame = 0, running = false, start = 0;
     const routes = [
-      { color: '#E6E0F0', points: [[.05,.69],[.20,.65],[.31,.51],[.47,.48],[.59,.36],[.76,.34],[.94,.20]] },
-      { color: '#E5E4E2', points: [[.17,.17],[.28,.31],[.43,.42],[.47,.48],[.58,.62],[.78,.68],[.94,.59]] },
-      { color: '#B99FC6', points: [[.06,.43],[.22,.45],[.36,.39],[.47,.48],[.65,.51],[.80,.46],[.95,.43]] }
+      { color: '#D6A64F', points: [[.05,.69],[.20,.65],[.31,.51],[.47,.48],[.59,.36],[.76,.34],[.94,.20]] },
+      { color: '#E8EDF3', points: [[.17,.17],[.28,.31],[.43,.42],[.47,.48],[.58,.62],[.78,.68],[.94,.59]] },
+      { color: '#E8C77E', points: [[.06,.43],[.22,.45],[.36,.39],[.47,.48],[.65,.51],[.80,.46],[.95,.43]] }
     ];
     const resize = () => {
       const rect = mapCanvas.getBoundingClientRect();
@@ -62,7 +62,7 @@
       if (!ctx || !width || !height) return;
       ctx.clearRect(0,0,width,height);
       const glow=ctx.createRadialGradient(width*.53,height*.46,5,width*.53,height*.46,width*.75);
-      glow.addColorStop(0,'rgba(111,78,55,.26)'); glow.addColorStop(1,'rgba(34,24,19,0)');
+      glow.addColorStop(0,'rgba(20,43,69,.3)'); glow.addColorStop(1,'rgba(13,32,53,0)');
       ctx.fillStyle=glow; ctx.fillRect(0,0,width,height);
       const cell=Math.max(23,Math.min(36,width/22));
       ctx.lineWidth=.65; ctx.strokeStyle='rgba(229,228,226,.15)';
@@ -71,9 +71,9 @@
       for(let row=0;row<5;row++) for(let col=0;col<9;col++){
         const x=width*(.055+col*.105), y=height*(.13+row*.145), w=width*.074, h=height*.095;
         const variation=(row*7+col*3)%11;
-        ctx.fillStyle=variation===0?'rgba(230,224,240,.12)':variation===5?'rgba(229,228,226,.1)':'rgba(38,27,22,.28)';
+        ctx.fillStyle=variation===0?'rgba(214,166,79,.16)':variation===5?'rgba(232,237,243,.12)':'rgba(13,32,53,.3)';
         ctx.fillRect(x,y,w,h); ctx.strokeStyle='rgba(229,228,226,.2)';ctx.lineWidth=.7;ctx.strokeRect(x,y,w,h);
-        ctx.fillStyle='rgba(229,228,226,.32)';ctx.fillRect(x+4,y+4,Math.max(3,w*.16),1);
+        ctx.fillStyle='rgba(232,199,126,.38)';ctx.fillRect(x+4,y+4,Math.max(3,w*.16),1);
       }
       const polygon=pts=>{ctx.beginPath();pts.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath()};
       for(let row=0;row<5;row++) for(let col=0;col<9;col++){
@@ -81,11 +81,11 @@
         const hash=(row*13+col*7)%9, elevation=height*(.035+(hash/9)*.12);
         const base=[[cx-rx,cy],[cx,cy-ry],[cx+rx,cy],[cx,cy+ry]];
         const roof=base.map(([x,y])=>[x,y-elevation]);
-        ctx.fillStyle='rgba(111,78,55,.18)';polygon(base);ctx.fill();ctx.strokeStyle='rgba(229,228,226,.24)';ctx.lineWidth=.65;ctx.stroke();
-        polygon([base[0],base[3],roof[3],roof[0]]);ctx.fillStyle='rgba(57,39,30,.96)';ctx.fill();ctx.strokeStyle='rgba(230,224,240,.32)';ctx.stroke();
-        polygon([base[2],base[3],roof[3],roof[2]]);ctx.fillStyle='rgba(79,55,41,.96)';ctx.fill();ctx.strokeStyle='rgba(230,224,240,.28)';ctx.stroke();
-        polygon(roof);ctx.fillStyle=hash===2?'rgba(230,224,240,.92)':hash===6?'rgba(229,228,226,.88)':'rgba(111,78,55,.98)';ctx.fill();ctx.strokeStyle='rgba(229,228,226,.48)';ctx.stroke();
-        ctx.strokeStyle='rgba(229,228,226,.48)';ctx.lineWidth=.65;ctx.beginPath();ctx.moveTo(roof[0][0]+2,roof[0][1]-2);ctx.lineTo(roof[0][0]+2,base[0][1]-4);ctx.stroke();
+        ctx.fillStyle='rgba(20,43,69,.22)';polygon(base);ctx.fill();ctx.strokeStyle='rgba(232,237,243,.28)';ctx.lineWidth=.65;ctx.stroke();
+        polygon([base[0],base[3],roof[3],roof[0]]);ctx.fillStyle='rgba(13,32,53,.97)';ctx.fill();ctx.strokeStyle='rgba(214,166,79,.4)';ctx.stroke();
+        polygon([base[2],base[3],roof[3],roof[2]]);ctx.fillStyle='rgba(30,58,89,.97)';ctx.fill();ctx.strokeStyle='rgba(214,166,79,.34)';ctx.stroke();
+        polygon(roof);ctx.fillStyle=hash===2?'rgba(214,166,79,.96)':hash===6?'rgba(232,237,243,.92)':'rgba(20,43,69,.98)';ctx.fill();ctx.strokeStyle='rgba(232,199,126,.55)';ctx.stroke();
+        ctx.strokeStyle='rgba(232,199,126,.5)';ctx.lineWidth=.65;ctx.beginPath();ctx.moveTo(roof[0][0]+2,roof[0][1]-2);ctx.lineTo(roof[0][0]+2,base[0][1]-4);ctx.stroke();
       }
       routes.forEach((route,ri)=>{
         ctx.save();ctx.beginPath();route.points.forEach((p,i)=>{const [x,y]=point(p);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});
@@ -97,16 +97,32 @@
         });
         for(let i=0;i<3;i++){const p=along(route.points,(seconds*(.065+ri*.009)+i/3+ri*.14)%1);const dot=ctx.createRadialGradient(p[0],p[1],0,p[0],p[1],8);dot.addColorStop(0,'#ffffff');dot.addColorStop(.2,route.color);dot.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=dot;ctx.fillRect(p[0]-8,p[1]-8,16,16);}
       });
-      const scan=(seconds*28)%(width+40)-20;const beam=ctx.createLinearGradient(scan-9,0,scan+9,0);beam.addColorStop(0,'rgba(230,224,240,0)');beam.addColorStop(.5,'rgba(230,224,240,.17)');beam.addColorStop(1,'rgba(230,224,240,0)');ctx.fillStyle=beam;ctx.fillRect(scan-9,0,18,height);
+      const scan=(seconds*28)%(width+40)-20;const beam=ctx.createLinearGradient(scan-9,0,scan+9,0);beam.addColorStop(0,'rgba(214,166,79,0)');beam.addColorStop(.5,'rgba(214,166,79,.19)');beam.addColorStop(1,'rgba(214,166,79,0)');ctx.fillStyle=beam;ctx.fillRect(scan-9,0,18,height);
     }
     const animate=now=>{if(!running)return;if(!start)start=now;draw((now-start)/1000);frame=requestAnimationFrame(animate)};
     const mapObserver=new IntersectionObserver(entries=>{const visible=entries.some(e=>e.isIntersecting);if(visible&&!running&&!reduceMotion){running=true;frame=requestAnimationFrame(animate)}else if(!visible&&running){running=false;cancelAnimationFrame(frame)}});
     mapObserver.observe(mapCanvas);new ResizeObserver(resize).observe(mapCanvas);resize();
     document.addEventListener('visibilitychange',()=>{if(document.hidden){running=false;cancelAnimationFrame(frame)}else if(!reduceMotion&&mapCanvas.getBoundingClientRect().bottom>0&&mapCanvas.getBoundingClientRect().top<innerHeight){running=true;frame=requestAnimationFrame(animate)}});
   }
+  const counters = [...document.querySelectorAll('[data-count]')];
+  if (counters.length) {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const renderCount = (el, value) => { const format = el.dataset.format; el.textContent = format === 'grouped' ? Math.round(value).toLocaleString('en-IN') : Math.round(value).toString(); };
+    const finishCount = el => renderCount(el, Number(el.dataset.count));
+    const animateCount = el => {
+      if (reducedMotion) { finishCount(el); return; }
+      const target = Number(el.dataset.count), duration = 1500, start = performance.now();
+      const tick = now => { const progress = Math.min((now - start) / duration, 1), eased = 1 - Math.pow(1 - progress, 4); renderCount(el, target * eased); if (progress < 1) requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+    };
+    if ('IntersectionObserver' in window && !reducedMotion) {
+      const counterObserver = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { animateCount(entry.target); counterObserver.unobserve(entry.target); } }), { threshold: .55 });
+      counters.forEach(el => counterObserver.observe(el));
+    } else counters.forEach(finishCount);
+  }
   const motionOff = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!motionOff && 'IntersectionObserver' in window) {
-    const revealTargets = document.querySelectorAll('.section-head, .metrics-grid article, .expertise-card, .project-card, .approach-list, .approach-list li, .career-item, .expertise-detail, .info-card, .timeline, .timeline-item, .detail-main section, .contact-card, .contact-form');
+    const revealTargets = document.querySelectorAll('.section-head, .regional-route, .metrics-grid article, .expertise-card, .project-card, .approach-list, .approach-list li, .career-item, .expertise-detail, .info-card, .timeline, .timeline-item, .about-story-aside, .about-story-copy, .detail-main section, .contact-card, .contact-form');
     revealTargets.forEach((item, index) => {
       item.classList.add('reveal-ready');
       item.style.setProperty('--reveal-delay', `${(index % 4) * 65}ms`);
